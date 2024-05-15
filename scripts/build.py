@@ -8,7 +8,7 @@ b_red = "\033[0;31m"
 def build_image(service):
     print(f"{b_green} Building docker image for {service} service... {color_off}")
     subprocess.run(f"docker build -t tonivrd/over-the-top-{service} ./{service}", shell=True, check=True)
-    print(f"{b_green} Finishied building docker image for {service} service {color_off}\n")
+    print(f"{b_green} Finished building docker image for {service} service {color_off}\n")
 
 build_image("client")
 build_image("worker")
