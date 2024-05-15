@@ -1,0 +1,44 @@
+name: CI/CD Workflow
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - master
+  push:
+    branches:
+      - develop
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Build docker image for testing the client
+        run: docker build -f ./client/Dockerfile.dev -t tonivrd/client-test ./client
+        
+      - name: Run tests
+        run: docker run -e CI=true tonivrd/client-test npm run test
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && github.event_name == 'push'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Build production docker image for client
+        run: docker build -t tonivrd/over-the-top-client ./client
+
+      - name: Build production docker image for worker
+        run: docker build -t tonivrd/over-the-top-worker ./worker
+
+      - name: Build production docker image for server
+        run: docker build -t tonivrd/over-the-top-server ./server
+
+      - name: Build production docker image for nginx
+        run: docker build -t tonivrd/over-the-top-nginx ./nginx
