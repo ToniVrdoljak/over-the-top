@@ -31,14 +31,5 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Build production docker image for client
-        run: docker build -t tonivrd/over-the-top-client ./client
-
-      - name: Build production docker image for worker
-        run: docker build -t tonivrd/over-the-top-worker ./worker
-
-      - name: Build production docker image for server
-        run: docker build -t tonivrd/over-the-top-server ./server
-
-      - name: Build production docker image for nginx
-        run: docker build -t tonivrd/over-the-top-nginx ./nginx
+      - name: Build all production docker images for the project
+        run: python ./scripts/build.py
