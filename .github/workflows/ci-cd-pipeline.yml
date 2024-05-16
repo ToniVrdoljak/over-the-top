@@ -34,6 +34,8 @@ jobs:
 
       - name: Build all docker images for the project
         run: python -u ./scripts/build.py
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
 
       - name: Push all docker images to repo
         run: python -u ./scripts/push.py
