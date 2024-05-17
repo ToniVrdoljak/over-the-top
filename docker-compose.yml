@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+
+  nginx:
+    restart: always
+    image: tonivrd/over-the-top-nginx
+    mem_limit: 128m
+    depends_on:
+      - api
+      - client
+    ports:
+      - 3050:80
+
+  api:
+    image: tonivrd/over-the-top-server
+    mem_limit: 128m
+    environment:
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - PGUSER=$PGUSER
+      - PGHOST=$PGHOST
+      - PGDATABASE=$PGDATABASE
+      - PGPASSWORD=$PGPASSWORD
+      - PGPORT=$PGPORT
+
+  client:
+    image: tonivrd/over-the-top-client
+    mem_limit: 128m
+    depends_on:
+      - api
+
+  worker:
+    image: tonivrd/over-the-top-worker
+    mem_limit: 128m
+    environment:
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
